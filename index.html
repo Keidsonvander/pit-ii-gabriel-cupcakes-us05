@@ -13,12 +13,12 @@ header{display:flex;justify-content:space-between;align-items:center;padding:18p
 .secao{padding:42px 22px}.grade{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:#fff;border:1px solid #eadfd8;border-radius:18px;overflow:hidden}
 .foto{height:150px;display:grid;place-items:center;font-size:4rem;background:#f8ece6}.conteudo{padding:18px}.linha{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .modal{position:fixed;inset:0;background:rgba(30,18,15,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.aberto{display:flex}
-.caixa{width:min(680px,100%);background:#fff;border-radius:22px;padding:28px;max-height:90vh;overflow:auto}.fechar{float:right;background:#eee;color:#333}
+.caixa{width:min(680px,100%);background:#fff;border-radius:22px;padding:28px;max-height:90vh;overflow:auto}.fechar{float:right;background:#eee;color:#333;margin-bottom:12px}.detalhes .btn{margin-top:8px;width:100%}
 .detalhes{display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:start}.detalhes .foto{border-radius:16px;height:180px}
 .info{display:grid;gap:10px}.info p{margin:0}.carrinho{max-width:1100px;margin:0 auto 50px;padding:0 22px}.painel{background:#fff;border:1px solid #eadfd8;border-radius:18px;padding:20px}
-.item{display:flex;justify-content:space-between;padding:7px 0}.msg{font-weight:700;min-height:24px;color:#6a3b2e}
+.item{display:flex;justify-content:space-between;padding:7px 0}.msg{font-weight:700;min-height:24px;color:#2f6b3a;background:#eef8f0;border-radius:10px;padding:10px}.msg:empty{padding:0}
 @media(max-width:900px){.grade{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){header{flex-direction:column;align-items:flex-start;gap:12px}.grade{grid-template-columns:1fr}.hero{margin:18px;padding:28px 20px}.secao{padding:30px 18px}.detalhes{grid-template-columns:1fr}.detalhes .foto{height:140px}}
+@media(max-width:600px){header{flex-direction:column;align-items:flex-start;gap:12px}.grade{grid-template-columns:1fr}.hero{margin:18px;padding:28px 20px}.secao{padding:30px 18px}.detalhes{grid-template-columns:1fr;gap:16px}.detalhes .foto{height:140px}.caixa{padding:20px}.fechar{float:none;width:100%;margin-bottom:18px}.info{gap:14px}.conteudo p,.info p{line-height:1.5}}
 </style>
 </head>
 <body>
@@ -96,7 +96,7 @@ function abrir(id){
 function fechar(){document.getElementById('modal').classList.remove('aberto')}
 function add(id){
  const p=produtos.find(x=>x.id===id), item=carrinho.get(id)||{...p,q:0};
- item.q++; carrinho.set(id,item); atualizar(); msg.textContent=`${p.n} adicionado ao carrinho.`; fechar();
+ item.q++; carrinho.set(id,item); atualizar(); msg.textContent=`${p.n} foi adicionado ao carrinho com sucesso.`; fechar();
 }
 function atualizar(){
  let total=0,qt=0,lin=[];
