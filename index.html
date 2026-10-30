@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cupcakes Gourmet — Gabriel</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#fffaf7;color:#2c1e1a}
+header{display:flex;justify-content:space-between;align-items:center;padding:18px 7%;background:#fff;border-bottom:1px solid #eadfd8;position:sticky;top:0;z-index:10}
+.marca{font-size:1.35rem;font-weight:700}.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:700;cursor:pointer;background:#7b3f2e;color:#fff}
+.hero,.secao{max-width:1100px;margin:auto}.hero{margin-top:28px;padding:44px;border-radius:24px;background:linear-gradient(135deg,#f5dfd5,#fff4ec)}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);margin:10px 0}.tag{text-transform:uppercase;letter-spacing:.12em;font-size:.75rem;font-weight:700;color:#985c48}
+.secao{padding:42px 22px}.grade{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:#fff;border:1px solid #eadfd8;border-radius:18px;overflow:hidden}
+.foto{height:150px;display:grid;place-items:center;font-size:4rem;background:#f8ece6}.conteudo{padding:18px}.linha{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.modal{position:fixed;inset:0;background:rgba(30,18,15,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.aberto{display:flex}
+.caixa{width:min(680px,100%);background:#fff;border-radius:22px;padding:28px;max-height:90vh;overflow:auto}.fechar{float:right;background:#eee;color:#333}
+.detalhes{display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:start}.detalhes .foto{border-radius:16px;height:180px}
+.info{display:grid;gap:10px}.info p{margin:0}.carrinho{max-width:1100px;margin:0 auto 50px;padding:0 22px}.painel{background:#fff;border:1px solid #eadfd8;border-radius:18px;padding:20px}
+.item{display:flex;justify-content:space-between;padding:7px 0}.msg{font-weight:700;min-height:24px;color:#6a3b2e}
+@media(max-width:900px){.grade{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){header{flex-direction:column;align-items:flex-start;gap:12px}.grade{grid-template-columns:1fr}.hero{margin:18px;padding:28px 20px}.secao{padding:30px 18px}.detalhes{grid-template-columns:1fr}.detalhes .foto{height:140px}}
+</style>
+</head>
+<body>
+<header>
+<div><div class="marca">Cupcakes Gourmet</div><small>Gabriel Ferreira de Oliveira • RGM 33704431</small></div>
+<button class="btn" onclick="document.getElementById('carrinho').scrollIntoView({behavior:'smooth'})">Carrinho (<span id="qtd">0</span>)</button>
+</header>
+
+<main>
+<section class="hero">
+<span class="tag">PIT II • US05</span>
+<h1>Veja todos os detalhes antes de comprar.</h1>
+<p>Catálogo responsivo com foto, descrição, ingredientes, tamanho, preço e opção de adicionar ao carrinho.</p>
+</section>
+
+<section class="secao">
+<span class="tag">Catálogo</span>
+<h2>Cupcakes disponíveis</h2>
+<div id="grade" class="grade"></div>
+</section>
+
+<section id="carrinho" class="carrinho">
+<div class="painel">
+<h2>Resumo do carrinho</h2>
+<div id="resumo">Nenhum produto adicionado.</div>
+<p id="msg" class="msg"></p>
+</div>
+</section>
+</main>
+
+<div id="modal" class="modal">
+<div class="caixa">
+<button class="btn fechar" onclick="fechar()">Fechar</button>
+<div id="conteudoModal"></div>
+</div>
+</div>
+
+<script>
+const produtos=[
+{id:1,n:'Cupcake Chocolate Intenso',d:'Massa de chocolate com cobertura cremosa e raspas de chocolate.',ing:'Farinha, ovos, leite, cacau, açúcar e chocolate.',tam:'Médio — 90 g',p:9.5,ico:'🧁'},
+{id:2,n:'Cupcake Morango',d:'Massa de baunilha com creme leve e finalização de morango.',ing:'Farinha, ovos, leite, baunilha, açúcar, creme e morango.',tam:'Médio — 95 g',p:10,ico:'🍓'},
+{id:3,n:'Cupcake Baunilha',d:'Massa macia de baunilha com cobertura artesanal.',ing:'Farinha, ovos, leite, baunilha, açúcar e manteiga.',tam:'Pequeno — 80 g',p:8.5,ico:'🧁'},
+{id:4,n:'Cupcake Red Velvet',d:'Massa red velvet com cobertura de cream cheese.',ing:'Farinha, ovos, leite, cacau, açúcar e cream cheese.',tam:'Grande — 110 g',p:11,ico:'❤️'}
+];
+const carrinho=new Map();
+const grade=document.getElementById('grade'), resumo=document.getElementById('resumo'), qtd=document.getElementById('qtd'), msg=document.getElementById('msg');
+function render(){
+ grade.innerHTML=produtos.map(p=>`
+ <article class="card">
+   <div class="foto">${p.ico}</div>
+   <div class="conteudo">
+     <h3>${p.n}</h3>
+     <p>${p.d}</p>
+     <div class="linha"><strong>R$ ${p.p.toFixed(2).replace('.',',')}</strong><button class="btn" onclick="abrir(${p.id})">Ver detalhes</button></div>
+   </div>
+ </article>`).join('');
+}
+function abrir(id){
+ const p=produtos.find(x=>x.id===id);
+ document.getElementById('conteudoModal').innerHTML=`
+ <div class="detalhes">
+  <div class="foto">${p.ico}</div>
+  <div class="info">
+   <span class="tag">Detalhes do produto</span>
+   <h2>${p.n}</h2>
+   <p><strong>Descrição:</strong> ${p.d}</p>
+   <p><strong>Ingredientes:</strong> ${p.ing}</p>
+   <p><strong>Tamanho:</strong> ${p.tam}</p>
+   <p><strong>Preço:</strong> R$ ${p.p.toFixed(2).replace('.',',')}</p>
+   <button class="btn" onclick="add(${p.id})">Adicionar ao carrinho</button>
+  </div>
+ </div>`;
+ document.getElementById('modal').classList.add('aberto');
+}
+function fechar(){document.getElementById('modal').classList.remove('aberto')}
+function add(id){
+ const p=produtos.find(x=>x.id===id), item=carrinho.get(id)||{...p,q:0};
+ item.q++; carrinho.set(id,item); atualizar(); msg.textContent=`${p.n} adicionado ao carrinho.`; fechar();
+}
+function atualizar(){
+ let total=0,qt=0,lin=[];
+ carrinho.forEach(x=>{qt+=x.q;total+=x.p*x.q;lin.push(`<div class="item"><span>${x.n} x${x.q}</span><strong>R$ ${(x.p*x.q).toFixed(2).replace('.',',')}</strong></div>`)});
+ qtd.textContent=qt;
+ resumo.innerHTML=carrinho.size?`${lin.join('')}<hr><div class="item"><strong>Total</strong><strong>R$ ${total.toFixed(2).replace('.',',')}</strong></div>`:'Nenhum produto adicionado.';
+}
+render(); atualizar();
+</script>
+</body>
+</html>
